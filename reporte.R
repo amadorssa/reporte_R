@@ -89,29 +89,26 @@ print(statistics_diferencia)
 
 
 # Boxplot of the distribution of the differences by origen
-boxplot(diferencia ~ origen, data = data,
-        main = "Distribución de las Diferencias por Origen",
-        xlab = "Origen",
-        ylab = "Diferencia (PRONOSTICO - REAL)",
-        las = 2,
-        cex.axis = 0.5,
-        notch = TRUE)
+ggplot(data, aes(x = origen, y = diferencia)) +
+  geom_boxplot(notch = TRUE) +
+  ggtitle("Distribución de las diferencias por origen") +
+  xlab("Origen") +
+  ylab("Diferencia (pronóstico - real)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 
-ggsave("boxplot_origen.png")
+ggsave("boxplot_origen.png", plot = last_plot())
 
 # Boxplot of the distribution of the differences by origen
-boxplot(diferencia ~ destino, data = data,
-        main = "Distribución de las Diferencias por Destino",
-        xlab = "Destino",
-        ylab = "Diferencia (PRONOSTICO - REAL)",
-        las = 2,
-        cex.axis = 0.5,
-        notch = TRUE)
+ggplot(data, aes(x = destino, y = diferencia)) +
+  geom_boxplot(notch = TRUE) +
+  ggtitle("Distribución de las diferencias por destino") +
+  xlab("Destino") +
+  ylab("Diferencia (pronóstico - real)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 
-ggsave("boxplot_destino.png")
+ggsave("boxplot_destino.png", plot = last_plot())
 
 # Double histogram of the forecast and the real
-
 ggplot(data = data, aes(x = pronostico, fill = "Pronóstico")) +
   geom_histogram(binwidth = 1, alpha = 0.5) +
   geom_histogram(aes(x = real, fill = "Real"), binwidth = 1, alpha = 0.5) +
@@ -120,7 +117,7 @@ ggplot(data = data, aes(x = pronostico, fill = "Pronóstico")) +
        y = "Frecuencia") +
   scale_fill_manual(values = c("Pronóstico" = "blue", "Real" = "red"))
 
-ggsave("histograma.png")
+ggsave("histograma.png", plot = last_plot())
 
 # Scatter plot of the forecast and the real
 ggplot(data = data, aes(x = pronostico, y = real)) +
@@ -129,10 +126,10 @@ ggplot(data = data, aes(x = pronostico, y = real)) +
        x = "Pronóstico",
        y = "Real")
 
-ggsave("scatterplot.png")
+ggsave("scatterplot.png", plot = last_plot())
 
 # Heatmap difference by origen and destino
-  ggplot(data = data, aes(x = origen, y = destino, fill = diferencia_abs)) +
+ggplot(data = data, aes(x = origen, y = destino, fill = diferencia_abs)) +
     geom_tile(color = "white", linewidth = 0.25) +
     #geom_text(aes(label = diferencia), color = "white", size = 4) +
     coord_fixed() +
@@ -143,7 +140,7 @@ ggsave("scatterplot.png")
          y = "Destino") +
     guides(fill = guide_colourbar(title = "Diferencia absoluta"))
 
-ggsave("heatmap.png")
+ggsave("heatmap.png", plot = last_plot())
 
 # Create a data frame with the data by origen and the sum of the differences
 data_origen <- data %>%
@@ -158,7 +155,7 @@ ggplot(data = data_origen, aes(x = origen, y = total_diferencia)) +
        y = "Diferencia Total") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
 
-ggsave("barplot_origen.png")
+ggsave("barplot_origen.png", plot = last_plot())
 
 data_time <- data %>%
   group_by(dia) %>%
@@ -171,7 +168,7 @@ ggplot(data = data_time, aes(x = dia, y = total_diferencia)) +
        x = "Día",
        y = "Diferencia Total")
 
-ggsave("timeseries.png")
+ggsave("timeseries.png", plot = last_plot())
 
 # Remove outliers (IQR)
 remove_outliers <- function(dataframe, columna) {
